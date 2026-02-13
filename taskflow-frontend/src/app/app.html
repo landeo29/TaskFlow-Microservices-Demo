@@ -1,0 +1,27 @@
+<mat-toolbar>
+  <mat-icon>task_alt</mat-icon>
+  <span>TaskFlow</span>
+  <span style="flex-grow: 1;"></span>
+  <button mat-button (click)="goToNotifications()" style="color: rgba(255,255,255,0.85) !important; font-size: 13px;">
+    <mat-icon style="margin-right: 4px;">notifications</mat-icon>
+    Notificaciones
+  </button>
+  <button mat-button (click)="goToTasks()" style="color: rgba(255,255,255,0.85) !important; font-size: 13px;">
+    <mat-icon style="margin-right: 4px;">task_alt</mat-icon>
+    Tareas
+  </button>
+</mat-toolbar>
+
+<div style="position: fixed; inset: 0; top: 64px; z-index: 0; pointer-events: none;">
+  <div style="
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(ellipse at 15% 50%, rgba(99,102,241,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 20%, rgba(16,185,129,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(99,102,241,0.04) 0%, transparent 45%);
+  "></div>
+</div>
+
+<div style="position: relative; z-index: 1; padding: 28px 32px; max-width: 1100px; margin: 0 auto;">
+  <router-outlet></router-outlet>
+</div>

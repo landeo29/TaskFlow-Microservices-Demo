@@ -1,0 +1,27 @@
+.status-chip {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pending {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.in-progress {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.completed {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+mat-table {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

@@ -1,0 +1,57 @@
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+  <div>
+    <h2>Notificaciones</h2>
+    <p style="color: #94a3b8; font-size: 13px; margin-top: 3px;">Historial de eventos del sistema</p>
+  </div>
+  <button mat-button (click)="loadNotifications()" style="color: #4f46e5;">
+    <mat-icon>refresh</mat-icon> Actualizar
+  </button>
+</div>
+
+<div class="loading-state" *ngIf="loading">
+  <mat-icon>hourglass_top</mat-icon>
+  <p>Cargando...</p>
+</div>
+
+<div *ngIf="!loading">
+
+  <div *ngFor="let notification of notifications; let i = index"
+       style="display: flex; gap: 16px; align-items: flex-start; background: white; border-radius: 14px; padding: 18px 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 10px; animation: notifFadeIn 0.3s cubic-bezier(0.16,1,0.3,1) both;"
+       [style.animationDelay]="i * 0.05 + 's'">
+
+    <div style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"
+         [style.background]="getEventBg(notification.eventType)">
+      <mat-icon style="font-size: 22px !important;" [style.color]="getEventColor(notification.eventType)">
+        {{ getEventIcon(notification.eventType) }}
+      </mat-icon>
+    </div>
+
+    <div style="flex-grow: 1; min-width: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+        <p style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0;">{{ notification.taskTitle }}</p>
+        <span style="font-size: 11px; color: #94a3b8; white-space: nowrap; flex-shrink: 0;">{{ notification.timestamp | date:'dd/MM HH:mm' }}</span>
+      </div>
+      <p style="font-size: 13px; color: #64748b; margin: 4px 0 0;">{{ notification.message }}</p>
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 12px;"
+              [style.background]="getEventBg(notification.eventType)"
+              [style.color]="getEventColor(notification.eventType)">
+          {{ getEventLabel(notification.eventType) }}
+        </span>
+        <span style="font-size: 11px; color: #94a3b8;">Tarea #{{ notification.taskId }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="notifications.length === 0">
+    <mat-icon>notifications_off</mat-icon>
+    <p>No hay notificaciones aún</p>
+  </div>
+</div>
+
+<style>
+  @keyframes notifFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>

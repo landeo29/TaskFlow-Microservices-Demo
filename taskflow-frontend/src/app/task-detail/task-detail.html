@@ -1,0 +1,110 @@
+<div class="loading-state" *ngIf="loading">
+  <mat-icon>hourglass_top</mat-icon>
+  <p>Cargando...</p>
+</div>
+
+<div *ngIf="!loading && task" style="max-width: 700px; margin: 0 auto;">
+
+  <button mat-button (click)="router.navigate(['/'])" style="margin-bottom: 12px; margin-left: -8px;">
+    <mat-icon>arrow_back</mat-icon> Volver a lista
+  </button>
+
+  <mat-card>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <mat-card-title>{{ task.title }}</mat-card-title>
+      <span class="status-chip" [class]="getStatusColor(task.status)">{{ getStatusLabel(task.status) }}</span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <strong>Descripción</strong>
+      <p style="font-size: 15px; color: #475569; line-height: 1.7; margin-top: 2px;">{{ task.description }}</p>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 110px; background: #f8fafc; border-radius: 12px; padding: 14px 16px; border: 1px solid #f1f5f9;">
+          <strong style="font-size: 10px; letter-spacing: 0.8px;">ID</strong>
+          <p style="font-size: 20px; font-weight: 700; color: #1e293b; margin-top: 2px;">#{{ task.id }}</p>
+        </div>
+        <div style="flex: 1; min-width: 140px; background: #f8fafc; border-radius: 12px; padding: 14px 16px; border: 1px solid #f1f5f9;">
+          <strong style="font-size: 10px; letter-spacing: 0.8px;">Creada</strong>
+          <p style="font-size: 13px; font-weight: 600; color: #475569; margin-top: 2px;">{{ task.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+        <div style="flex: 1; min-width: 140px; background: #f8fafc; border-radius: 12px; padding: 14px 16px; border: 1px solid #f1f5f9;">
+          <strong style="font-size: 10px; letter-spacing: 0.8px;">Actualizada</strong>
+          <p style="font-size: 13px; font-weight: 600; color: #475569; margin-top: 2px;">{{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="editTask()">
+        <mat-icon>edit</mat-icon> Editar
+      </button>
+      <button mat-raised-button color="accent" (click)="startTask()" *ngIf="task.status === 'PENDING'">
+        <mat-icon>play_arrow</mat-icon> Iniciar
+      </button>
+      <button mat-raised-button color="accent" (click)="completeTask()" *ngIf="task.status === 'IN_PROGRESS'">
+        <mat-icon>check_circle</mat-icon> Completar
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteTask()">
+        <mat-icon>delete</mat-icon> Eliminar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <div style="margin-top: 16px; background: white; border-radius: 16px; padding: 20px 24px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <p style="font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px;">Flujo de la tarea</p>
+
+    <div style="display: flex; align-items: center;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.4s ease;"
+             [style.background]="task.status === 'PENDING' ? '#eef2ff' : (task.status === 'IN_PROGRESS' || task.status === 'COMPLETED') ? '#eef2ff' : '#f1f5f9'"
+             [style.boxShadow]="task.status === 'PENDING' ? '0 0 0 3px rgba(99,102,241,0.2)' : 'none'">
+          <mat-icon style="font-size: 20px !important;"
+                    [style.color]="task.status === 'PENDING' || task.status === 'IN_PROGRESS' || task.status === 'COMPLETED' ? '#6366f1' : '#cbd5e1'">
+            {{ task.status === 'IN_PROGRESS' || task.status === 'COMPLETED' ? 'check_circle' : 'radio_button_checked' }}
+          </mat-icon>
+        </div>
+        <span style="font-size: 11px; font-weight: 600; transition: color 0.3s;"
+              [style.color]="task.status === 'PENDING' ? '#6366f1' : (task.status === 'IN_PROGRESS' || task.status === 'COMPLETED') ? '#6366f1' : '#94a3b8'">Pendiente</span>
+      </div>
+
+      <div style="flex-grow: 1; height: 3px; margin: -18px 8px 18px; border-radius: 2px; transition: background 0.4s ease;"
+           [style.background]="task.status === 'IN_PROGRESS' || task.status === 'COMPLETED' ? '#6366f1' : '#e2e8f0'"></div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.4s ease;"
+             [style.background]="task.status === 'IN_PROGRESS' ? '#eff6ff' : task.status === 'COMPLETED' ? '#eff6ff' : '#f1f5f9'"
+             [style.boxShadow]="task.status === 'IN_PROGRESS' ? '0 0 0 3px rgba(37,99,235,0.2)' : 'none'">
+          <mat-icon style="font-size: 20px !important;"
+                    [style.color]="task.status === 'IN_PROGRESS' || task.status === 'COMPLETED' ? '#2563eb' : '#cbd5e1'">
+            {{ task.status === 'COMPLETED' ? 'check_circle' : 'radio_button_checked' }}
+          </mat-icon>
+        </div>
+        <span style="font-size: 11px; font-weight: 600; transition: color 0.3s;"
+              [style.color]="task.status === 'IN_PROGRESS' ? '#2563eb' : task.status === 'COMPLETED' ? '#2563eb' : '#94a3b8'">En Proceso</span>
+      </div>
+
+      <div style="flex-grow: 1; height: 3px; margin: -18px 8px 18px; border-radius: 2px; transition: background 0.4s ease;"
+           [style.background]="task.status === 'COMPLETED' ? '#10b981' : '#e2e8f0'"></div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.4s ease;"
+             [style.background]="task.status === 'COMPLETED' ? '#ecfdf5' : '#f1f5f9'"
+             [style.boxShadow]="task.status === 'COMPLETED' ? '0 0 0 3px rgba(16,185,129,0.2)' : 'none'">
+          <mat-icon style="font-size: 20px !important;"
+                    [style.color]="task.status === 'COMPLETED' ? '#10b981' : '#cbd5e1'">
+            radio_button_checked
+          </mat-icon>
+        </div>
+        <span style="font-size: 11px; font-weight: 600; transition: color 0.3s;"
+              [style.color]="task.status === 'COMPLETED' ? '#10b981' : '#94a3b8'">Completada</span>
+      </div>
+    </div>
+  </div>
+</div>

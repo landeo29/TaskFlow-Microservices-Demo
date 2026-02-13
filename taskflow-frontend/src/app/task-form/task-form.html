@@ -1,0 +1,52 @@
+<div style="max-width: 680px; margin: 0 auto;">
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+    <div>
+      <h2>{{ formTitle }}</h2>
+      <p style="color: #94a3b8; font-size: 13px; margin-top: 3px;">
+        {{ isEditing ? 'Modifica los datos de esta tarea' : 'Llena los campos para crear una nueva tarea' }}
+      </p>
+    </div>
+    <button mat-button (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-form-field style="width: 100%; margin-bottom: 18px;">
+      <mat-label>Título</mat-label>
+      <input matInput [(ngModel)]="task.title" placeholder="Título de la tarea" required>
+    </mat-form-field>
+
+    <mat-form-field style="width: 100%; margin-bottom: 18px;">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput [(ngModel)]="task.description" rows="4" placeholder="Describe la tarea en detalle..."></textarea>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isEditing" style="width: 100%; margin-bottom: 18px;">
+      <mat-label>Estado</mat-label>
+      <mat-select [(ngModel)]="task.status">
+        <mat-option value="PENDING">
+          <span class="status-chip pending">Pendiente</span>
+        </mat-option>
+        <mat-option value="IN_PROGRESS">
+          <span class="status-chip in-progress">En Proceso</span>
+        </mat-option>
+        <mat-option value="COMPLETED">
+          <span class="status-chip completed">Completada</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!task.title">
+        <mat-icon>{{ isEditing ? 'save' : 'add_circle' }}</mat-icon>
+        {{ isEditing ? 'Guardar cambios' : 'Crear tarea' }}
+      </button>
+      <button mat-button (click)="onCancel()">
+        <mat-icon>cancel</mat-icon> Cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
